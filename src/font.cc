@@ -142,7 +142,7 @@ namespace zutty
       setupSupportedCodes ();
 
       if (!overlay) {
-          WriteImage("test.bmp", atlasBuf.data(), px*nx, py*ny);
+          WriteImage("test.bmp", atlasBuf.data(), px*nx, py*ny, px, py);
       }
    }
 

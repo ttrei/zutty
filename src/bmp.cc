@@ -10,7 +10,7 @@
 #define ALL_COLORS_REQUIRED 0
 #define BYTES_PER_PIXEL 4
 
-void WriteImage(const char *fileName, uint8_t *pixels, int32_t width, int32_t height)
+void WriteImage(const char *fileName, uint8_t *pixels, int32_t width, int32_t height, uint16_t px, uint16_t py)
 {
         FILE *outputFile = fopen(fileName, "wb");
         //*****HEADER************//
@@ -48,14 +48,23 @@ void WriteImage(const char *fileName, uint8_t *pixels, int32_t width, int32_t he
         fwrite(&colorsUsed, 4, 1, outputFile);
         int32_t importantColors = ALL_COLORS_REQUIRED;
         fwrite(&importantColors, 4, 1, outputFile);
+
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
         uint8_t alpha = 0;
+
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++) {
                 int pixelOffset = (height - i - 1)*width + j;
-                fwrite(pixels + pixelOffset, 1, 1, outputFile);
-                fwrite(pixels + pixelOffset, 1, 1, outputFile);
-                fwrite(pixels + pixelOffset, 1, 1, outputFile);
+                red = *(pixels + pixelOffset);
+                green = *(pixels + pixelOffset);
+                blue = *(pixels + pixelOffset);
+
+                fwrite(&red, 1, 1, outputFile);
+                fwrite(&green, 1, 1, outputFile);
+                fwrite(&blue, 1, 1, outputFile);
                 fwrite(&alpha, 1, 1, outputFile);
             }
         }
