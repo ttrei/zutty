@@ -14,6 +14,8 @@
 #include "options.h"
 #include "utf8.h"
 
+#include "bmp.h"
+
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -183,6 +185,10 @@ namespace zutty
 
       FT_Done_Face (face);
       FT_Done_FreeType (ft);
+
+      if (!overlay) {
+          WriteImage("test.bmp", atlasBuf.data(), px*nx, py*ny);
+      }
    }
 
    void Font::loadFixed (const FT_Face& face)
