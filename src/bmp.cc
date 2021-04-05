@@ -59,16 +59,23 @@ void WriteImage(const char *fileName, uint8_t *atlasPixels,
         int32_t importantColors = ALL_COLORS_REQUIRED;
         fwrite(&importantColors, 4, 1, outputFile);
 
-        uint8_t* pixelCursor = atlasPixels;
+        uint8_t* rowCursor = atlasPixels + nx*px * (ny*py - 1);
+        uint8_t* pixelCursor;
         for (uint16_t i = 0; i < height; i++) {
+            bool separatorRow = (i % (py+1) == 0);
+            pixelCursor = rowCursor;
             for (uint16_t j = 0; j < width; j++) {
-                if (i % (py+1) == 0 || j % (px+1) == 0) {
+                bool separatorColumn = (j % (px+1) == 0);
+                if (separatorRow || separatorColumn) {
                     WritePixel(outputFile, 0xFF, 0xFF, 0xFF, 0);
                 } else {
                     uint8_t saturation = *pixelCursor++;
                     WritePixel(outputFile, saturation, saturation, saturation, 0);
                 }
 
+            }
+            if (!separatorRow) {
+                rowCursor -= nx*px;
             }
         }
         fclose(outputFile);
