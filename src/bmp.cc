@@ -10,15 +10,26 @@
 #define ALL_COLORS_REQUIRED 0
 #define BYTES_PER_PIXEL 4
 
-void WriteImage(const char *fileName, uint8_t *pixels, int32_t width, int32_t height, uint16_t px, uint16_t py)
+void WritePixel(FILE* f, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    fwrite(&r, 1, 1, f);
+    fwrite(&g, 1, 1, f);
+    fwrite(&b, 1, 1, f);
+    fwrite(&a, 1, 1, f);
+}
+
+void WriteImage(const char *fileName, uint8_t *atlasPixels,
+                uint16_t px, uint16_t py, uint16_t nx, uint16_t ny)
 {
+        int32_t width = nx*px + nx + 1;
+        int32_t height = ny*py + ny + 1;
+        int32_t imageSize = width*height*BYTES_PER_PIXEL;
+        int32_t fileSize = imageSize + HEADER_SIZE + INFO_HEADER_SIZE;
+
         FILE *outputFile = fopen(fileName, "wb");
         //*****HEADER************//
         const char *BM = "BM";
         fwrite(&BM[0], 1, 1, outputFile);
         fwrite(&BM[1], 1, 1, outputFile);
-        int rowSize = width*BYTES_PER_PIXEL;
-        int32_t fileSize = rowSize*height + HEADER_SIZE + INFO_HEADER_SIZE;
         fwrite(&fileSize, 4, 1, outputFile);
         int32_t reserved = 0x0000;
         fwrite(&reserved, 4, 1, outputFile);
@@ -38,7 +49,6 @@ void WriteImage(const char *fileName, uint8_t *pixels, int32_t width, int32_t he
         int32_t compression = NO_COMPRESION;
         fwrite(&compression, 4, 1, outputFile);
         //write image size (in bytes)
-        int32_t imageSize = width*height*BYTES_PER_PIXEL;
         fwrite(&imageSize, 4, 1, outputFile);
         int32_t resolutionX = 11811; //300 dpi
         int32_t resolutionY = 11811; //300 dpi
@@ -49,23 +59,16 @@ void WriteImage(const char *fileName, uint8_t *pixels, int32_t width, int32_t he
         int32_t importantColors = ALL_COLORS_REQUIRED;
         fwrite(&importantColors, 4, 1, outputFile);
 
-        uint8_t red;
-        uint8_t green;
-        uint8_t blue;
-        uint8_t alpha = 0;
+        uint8_t* pixelCursor = atlasPixels;
+        for (uint16_t i = 0; i < height; i++) {
+            for (uint16_t j = 0; j < width; j++) {
+                if (i % (py+1) == 0 || j % (px+1) == 0) {
+                    WritePixel(outputFile, 0xFF, 0xFF, 0xFF, 0);
+                } else {
+                    uint8_t saturation = *pixelCursor++;
+                    WritePixel(outputFile, saturation, saturation, saturation, 0);
+                }
 
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++) {
-                int pixelOffset = (height - i - 1)*width + j;
-                red = *(pixels + pixelOffset);
-                green = *(pixels + pixelOffset);
-                blue = *(pixels + pixelOffset);
-
-                fwrite(&red, 1, 1, outputFile);
-                fwrite(&green, 1, 1, outputFile);
-                fwrite(&blue, 1, 1, outputFile);
-                fwrite(&alpha, 1, 1, outputFile);
             }
         }
         fclose(outputFile);

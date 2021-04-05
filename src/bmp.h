@@ -2,4 +2,5 @@
 
 #include <cstdint>
 
-void WriteImage(const char *fileName, uint8_t *pixels, int32_t width, int32_t height, uint16_t px, uint16_t py);
+void WriteImage(const char *fileName, uint8_t *atlasPixels,
+                uint16_t px, uint16_t py, uint16_t nx, uint16_t ny);
