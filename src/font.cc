@@ -187,7 +187,7 @@ namespace zutty
       FT_Done_FreeType (ft);
 
       if (!overlay) {
-          WriteImage("test.bmp", atlasBuf.data(), px*nx, py*ny);
+          WriteImage("test.bmp", atlasBuf.data(), px*nx, py*ny, px, py);
       }
    }
 
