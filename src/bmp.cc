@@ -18,7 +18,8 @@ void WritePixel(FILE* f, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 }
 
 void WriteImage(const char *fileName, uint8_t *atlasPixels,
-                uint16_t px, uint16_t py, uint16_t nx, uint16_t ny)
+                uint16_t px, uint16_t py, uint16_t nx, uint16_t ny,
+                uint16_t pixelsAboveBaseline)
 {
         int32_t width = nx*px + nx + 1;
         int32_t height = ny*py + ny + 1;
@@ -59,10 +60,13 @@ void WriteImage(const char *fileName, uint8_t *atlasPixels,
         int32_t importantColors = ALL_COLORS_REQUIRED;
         fwrite(&importantColors, 4, 1, outputFile);
 
+        uint16_t pixelsBelowBaseline = py - pixelsAboveBaseline - 1;
+
         uint8_t* rowCursor = atlasPixels + nx*px * (ny*py - 1);
         uint8_t* pixelCursor;
         for (uint16_t i = 0; i < height; i++) {
             bool separatorRow = (i % (py+1) == 0);
+            bool baselineRow = (i % (py+1) + 1 == pixelsBelowBaseline);
             pixelCursor = rowCursor;
             for (uint16_t j = 0; j < width; j++) {
                 bool separatorColumn = (j % (px+1) == 0);
@@ -70,7 +74,11 @@ void WriteImage(const char *fileName, uint8_t *atlasPixels,
                     WritePixel(outputFile, 0xFF, 0xFF, 0xFF, 0);
                 } else {
                     uint8_t saturation = *pixelCursor++;
-                    WritePixel(outputFile, saturation, saturation, saturation, 0);
+                    if (baselineRow) {
+                        WritePixel(outputFile, 0, 0xFF, 0, 0);
+                    } else {
+                        WritePixel(outputFile, saturation, saturation, saturation, 0);
+                    }
                 }
 
             }
