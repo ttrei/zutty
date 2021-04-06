@@ -71,7 +71,7 @@ void WriteImage(const char *fileName, uint8_t *atlasPixels,
             for (uint16_t j = 0; j < width; j++) {
                 bool separatorColumn = (j % (px+1) == 0);
                 if (separatorRow || separatorColumn) {
-                    WritePixel(outputFile, 0xFF, 0xFF, 0xFF, 0);
+                    WritePixel(outputFile, 0, 0, 0x80, 0);
                 } else {
                     uint8_t saturation = *pixelCursor++;
                     if (baselineRow && saturation == 0) {
