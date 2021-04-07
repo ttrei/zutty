@@ -70,6 +70,18 @@ namespace zutty
       else
          loadScaled (face);
 
+      if (!overlay) {
+          std::cout << "Ascender: " << face->ascender << std::endl
+                    << "Descender: " << face->descender << std::endl
+                    << "Height: " << face->height << std::endl
+                    << "bbox.yMax: " << face->bbox.yMax << std::endl
+                    << "bbox.yMin: " << face->bbox.yMin << std::endl
+                    << "bbox.xMax: " << face->bbox.xMax << std::endl
+                    << "bbox.xMin: " << face->bbox.xMin << std::endl
+                    << std::endl;
+      }
+
+
       /* Given that we have face->num_glyphs glyphs to load, with each
        * individual glyph having a size of px * py, compute nx and ny so
        * that the resulting atlas texture geometry is closest to a square.
