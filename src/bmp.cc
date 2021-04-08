@@ -60,13 +60,13 @@ void WriteImage(const char *fileName, uint8_t *atlasPixels,
         int32_t importantColors = ALL_COLORS_REQUIRED;
         fwrite(&importantColors, 4, 1, outputFile);
 
-        uint16_t pixelsBelowBaseline = py - pixelsAboveBaseline - 1;
+        uint16_t pixelsBelowBaseline = py - pixelsAboveBaseline;
 
         uint8_t* rowCursor = atlasPixels + nx*px * (ny*py - 1);
         uint8_t* pixelCursor;
         for (uint16_t i = 0; i < height; i++) {
             bool separatorRow = (i % (py+1) == 0);
-            bool baselineRow = (i % (py+1) + 1 == pixelsBelowBaseline);
+            bool baselineRow = (i % (py+1) == pixelsBelowBaseline);
             pixelCursor = rowCursor;
             for (uint16_t j = 0; j < width; j++) {
                 bool separatorColumn = (j % (px+1) == 0);
