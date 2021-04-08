@@ -286,7 +286,11 @@ namespace zutty
       }
       if (!overlay)
       {
-         baseline = tpy * (double)face->ascender / face->height;
+         double height = face->bbox.yMax - face->bbox.yMin;
+         px = opts.fontsize *
+              (double)face->max_advance_width / face->units_per_EM;
+         py = px * (double)height / face->max_advance_width;
+         baseline = py * (double)face->bbox.yMax / height;
       }
       logI << "Glyph size " << px << "x" << py << std::endl;
    }
