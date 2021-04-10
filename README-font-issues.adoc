@@ -1,0 +1,41 @@
+= Debugging font issues
+
+I encountered issues when using outline fonts.
+
+First tried different fonts.
+Dejavu and Cascadia look great but capital letters with diacritics are
+vertiaclly shifted. `tree` output also is slightly messed up.
+....
+Zutty.font:                    DejavuSansMono
+Zutty.fontsize:                14
+
+Zutty.font:                    CascadiaCode
+Zutty.fontsize:                14
+....
+
+Looks OK but vertical height is one pixel bigger compared to the above
+....
+Zutty.font:                    sourcecodepro
+Zutty.fontsize:                15
+....
+
+Added code to output the entire atlas as bmp (`bmp.cc`).
+
+Found out that zutty computes the cell size from face attributes that contain
+misleading values (face->ascender and face->height).
+These values don't describe the extent of the more extreme glyphs.
+As a result, the cell cannot accomodate all glyphs, at least if we want them to
+have correct vertical positioning.
+
+I tried to use the face->bbox attribute - cell becomes bigger, Latvian chars
+with diacritics are positioned correctly, but some chars are still shifted.
+And the vertical spacing between lines becomes too big for my taste.
+
+== TODO
+
+Read/think about rendering of monospaced fonts in terminal emulators.
+What do we really want to achieve?
+
+Check out other terminal emulators - how do they do it?
+
+Explore hinting and anti-aliasing. Freetype probably performs hinting by default.
