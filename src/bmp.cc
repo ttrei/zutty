@@ -21,6 +21,7 @@ void WriteImage(const char *fileName, uint8_t *atlasPixels,
                 uint16_t px, uint16_t py, uint16_t nx, uint16_t ny,
                 uint16_t pixelsAboveBaseline)
 {
+        // width and height include the additional pixels for grid lines
         int32_t width = nx*px + nx + 1;
         int32_t height = ny*py + ny + 1;
         int32_t imageSize = width*height*BYTES_PER_PIXEL;
@@ -66,7 +67,11 @@ void WriteImage(const char *fileName, uint8_t *atlasPixels,
         uint8_t* pixelCursor;
         for (uint16_t i = 0; i < height; i++) {
             bool separatorRow = (i % (py+1) == 0);
+
+            // Positioned the baseline by trial and error.
+            // This math is probably slightly off.
             bool baselineRow = (i % (py+1) == pixelsBelowBaseline);
+
             pixelCursor = rowCursor;
             for (uint16_t j = 0; j < width; j++) {
                 bool separatorColumn = (j % (px+1) == 0);
