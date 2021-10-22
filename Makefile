@@ -11,18 +11,26 @@ CXXFLAGS = \
    -std=c++14 \
    -fno-omit-frame-pointer \
    -fsigned-char \
-   -fPIC \
    -Wall \
    -Wextra \
    -Wsign-compare \
    -Wno-unused-parameter \
    -DLINUX \
-	$(shell pkg-config --cflags freetype2 xmu egl glesv2)
+   -DHAVE_EGL_EGL_H=1 \
+   -DHAVE_FT=1 \
+   -DHAVE_GLES3_GL31_H=1 \
+   -DHAVE_XMU=1 \
+   $(shell pkg-config --cflags freetype2 xmu egl glesv2)
+
 
 LDFLAGS = \
-	-shared \
+	-Wl,-Bstatic \
+	-Wl,-Bdynamic \
 	-lpthread \
+	-flto \
 	$(shell pkg-config --libs freetype2 xmu egl glesv2)
+
+	#-shared \
 
 zutty: $(BUILDDIR) $(BUILDDIR)/zutty
 
@@ -33,11 +41,11 @@ $(BUILDDIR):
 
 $(BUILDDIR)/zutty: CXXFLAGS += -Werror -O3 -march=native -mtune=native -flto -DZUTTY_VERSION='"$(VERSION)"'
 $(BUILDDIR)/zutty: $(OBJECTS)
-	$(CC) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
+	$(CC) $(LDFLAGS) $^ -o $@
 
 $(BUILDDIR)/zutty.dbg: CXXFLAGS += -DDEBUG -Og -g -ggdb -DZUTTY_VERSION='"$(VERSION)-debug"'
 $(BUILDDIR)/zutty.dbg: $(OBJECTS)
-	$(CC) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
+	$(CC) $(LDFLAGS) $^ -o $@
 
 $(OBJECTS): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.cc
 	$(CC) -c $(CXXFLAGS) $< -o $@
