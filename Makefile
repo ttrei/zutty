@@ -41,11 +41,11 @@ $(BUILDDIR):
 
 $(BUILDDIR)/zutty: CXXFLAGS += -Werror -O3 -march=native -mtune=native -flto -DZUTTY_VERSION='"$(VERSION)"'
 $(BUILDDIR)/zutty: $(OBJECTS)
-	$(CC) $(LDFLAGS) $^ -o $@
+	$(CC) $^ -o $@ $(LDFLAGS)
 
 $(BUILDDIR)/zutty.dbg: CXXFLAGS += -DDEBUG -Og -g -ggdb -DZUTTY_VERSION='"$(VERSION)-debug"'
 $(BUILDDIR)/zutty.dbg: $(OBJECTS)
-	$(CC) $(LDFLAGS) $^ -o $@
+	$(CC) $^ -o $@ $(LDFLAGS)
 
 $(OBJECTS): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.cc
 	$(CC) -c $(CXXFLAGS) $< -o $@
