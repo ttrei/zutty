@@ -30,8 +30,6 @@ LDFLAGS = \
 	-flto \
 	$(shell pkg-config --libs freetype2 xmu egl glesv2)
 
-	#-shared \
-
 zutty: $(BUILDDIR) $(BUILDDIR)/zutty
 
 zutty.dbg: $(BUILDDIR) $(BUILDDIR)/zutty.dbg
