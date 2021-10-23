@@ -1,6 +1,7 @@
 .lock-waf*
 .waf*
 build/
-build-make/
+zig-out/
+zig-cache/
 README.html
 doc/*.html
