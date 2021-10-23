@@ -6,7 +6,7 @@ BUILDDIR = build-make
 SOURCES = $(wildcard $(SOURCEDIR)/*.cc)
 OBJECTS = $(patsubst $(SOURCEDIR)/%.cc,$(BUILDDIR)/%.o,$(SOURCES))
 
-CC = g++
+CC = zig c++
 CXXFLAGS = \
    -std=c++14 \
    -fno-omit-frame-pointer \
@@ -24,8 +24,6 @@ CXXFLAGS = \
 
 
 LDFLAGS = \
-	-Wl,-Bstatic \
-	-Wl,-Bdynamic \
 	-lpthread \
 	-flto \
 	$(shell pkg-config --libs freetype2 xmu egl glesv2)
