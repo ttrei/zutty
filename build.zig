@@ -20,7 +20,7 @@ pub fn build(b: *std.build.Builder) !void {
         exe.defineCMacro("MACOS", null);
     } // TODO: bsd, solaris
 
-    const cxxflags = [_][]const u8{
+    const cxxflags_common = .{
         "-std=c++14",
         "-fno-omit-frame-pointer",
         "-fsigned-char",
@@ -29,26 +29,18 @@ pub fn build(b: *std.build.Builder) !void {
         "-Wsign-compare",
         "-Wno-unused-parameter",
     };
-
-    if (b.is_release) {
-        // TODO: how to do this?
-        //       '++' operator is available in comptime.
-        //       b.is_release is available in runtime.
-        // cxxflags = cxxflags ++ [_][]const u8{
-        //     "-Werror",
-        //     "-O3",
-        //     "-march=native",
-        //     "-mtune=native",
-        //     // "-flto", // TODO: add only to link flags
-        // };
-    } else {
-        // cxxflags = cxxflags ++ [_][]const u8{
-        //     "-Og",
-        //     "-g",
-        //     "-ggdb",
-        // };
-        exe.defineCMacro("DEBUG", null);
-    }
+    const cxxflags_release = cxxflags_common ++ .{
+        "-Werror",
+        "-O3",
+        "-march=native",
+        "-mtune=native",
+        "-flto",
+    };
+    const cxxflags_debug = cxxflags_common ++ .{
+        "-Og",
+        "-g",
+        "-ggdb",
+    };
 
     exe.addCSourceFiles(&.{
         "src/charvdev.cc",
@@ -63,20 +55,17 @@ pub fn build(b: *std.build.Builder) !void {
         "src/renderer.cc",
         "src/selmgr.cc",
         "src/vterm.cc",
-    }, &cxxflags);
+    }, if (b.is_release) &cxxflags_release else &cxxflags_debug);
+
+    if (!b.is_release) {
+        exe.defineCMacro("DEBUG", null);
+    }
 
     // Construct version string
     // Inspired by https://github.com/ziglang/zig/blob/master/build.zig
-    const git_describe = try b.exec(&[_][]const u8{
-        "git",
-        "-C",
-        b.build_root,
-        "describe",
-        "--tags",
-        "--dirty",
-    });
-    // TODO: How to simplify? The only difference is in the formatstring which must be known at
-    // comptime.
+    const git_describe = try b.exec(&.{ "git", "describe", "--tags", "--dirty" });
+    // TODO: Can we get rid of "if ... else"? The only difference is in the formatstring which must
+    // be known at comptime.
     var version: []u8 = undefined;
     if (b.is_release) {
         version = try std.fmt.allocPrint(
