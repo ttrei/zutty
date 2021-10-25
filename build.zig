@@ -20,6 +20,8 @@ pub fn build(b: *std.build.Builder) !void {
         exe.defineCMacro("MACOS", null);
     } // TODO: bsd, solaris
 
+    // TODO: Find out if all of these flags are needed. zig may use quite
+    // restrictive flags by default.
     const cxxflags_common = .{
         "-std=c++14",
         "-fno-omit-frame-pointer",
