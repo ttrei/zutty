@@ -4,7 +4,7 @@ pub fn build(b: *std.build.Builder) !void {
     const target = b.standardTargetOptions(.{});
     const mode = b.standardReleaseOptions();
 
-    const exe = b.addExecutable("zutty", null);
+    const exe = b.addExecutable("zutty", "src/main.zig");
     exe.setTarget(target);
     exe.setBuildMode(mode);
     exe.install();
@@ -43,6 +43,8 @@ pub fn build(b: *std.build.Builder) !void {
         "-g",
         "-ggdb",
     };
+
+    exe.addIncludePath("src");
 
     exe.addCSourceFiles(&.{
         "src/charvdev.cc",

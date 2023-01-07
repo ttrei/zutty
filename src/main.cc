@@ -15,6 +15,8 @@
 #include <X11/keysym.h>
 #include <X11/Xmu/Error.h>
 
+#include "main.h"
+
 #include "base.h"
 #include "base64.h"
 #include "fontpack.h"
@@ -1210,8 +1212,8 @@ handleXIOError (Display* dpy)
    return 0;
 }
 
-int
-main (int argc, char* argv[])
+extern "C" int
+old_main (int argc, char* argv[])
 {
    EGLSurface eglSurface;
    EGLContext eglCtx;
