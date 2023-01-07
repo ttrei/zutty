@@ -1277,7 +1277,7 @@ main (int argc, char* argv[])
    if (opts.verbose)
       opts.printVersion ();
 
-   if (setenv ("ZUTTY_VERSION", ZUTTY_VERSION, 1) < 0)
+   if (setenv ("ZUTTY_VERSION", (char *)ZUTTY_VERSION, 1) < 0)
       SYS_ERROR ("setenv (ZUTTY_VERSION)");
 
    char argv0 [PATH_MAX];
