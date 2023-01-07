@@ -1,0 +1,4 @@
+-I
+/usr/include/freetype2/
+-DZUTTY_VERSION
+development-clangd
