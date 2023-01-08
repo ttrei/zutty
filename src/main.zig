@@ -6,12 +6,17 @@ const print = std.debug.print;
 
 pub fn main() !void {
 
-    const alloc = std.heap.page_allocator;
-    var args = try std.process.argsAlloc(alloc);
-    defer std.process.argsFree(alloc, args);
+    const allocator = std.heap.page_allocator;
+    var args = try std.process.argsAlloc(allocator);
+    defer std.process.argsFree(allocator, args);
 
-    // TODO: Fix argument passing. It segfaults. Probably need to 0-terminate the strings.
-    const rc = c.old_main(@intCast(i32, args.len), @ptrCast([*c][*c]u8, args));
+    var argv = try allocator.alloc([*:0]u8, args.len);
+    defer allocator.free(argv);
+    for (args) |arg, i| {
+        argv[i] = arg.ptr;
+    }
+
+    const rc = c.old_main(@intCast(c_int, argv.len), @ptrCast([*c][*c]u8, argv));
     if (rc != 0) {
         std.debug.print("Execution failed\n", .{});
     }
