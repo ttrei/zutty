@@ -176,6 +176,8 @@ namespace
 
 } // namespace
 
+extern "C" void zigFunction();
+
 namespace zutty
 {
    Fontpack::Fontpack (const std::string& fontpath,
@@ -186,6 +188,10 @@ namespace zutty
            << "; fontname=" << fontname
            << "; dwfontname=" << dwfontname
            << std::endl;
+
+      std::cout << "Hello from Fontback constructor!" << std::endl;
+
+      zigFunction();
 
       // Look for & initialize the regular font (with variants)
 

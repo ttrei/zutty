@@ -4,6 +4,12 @@ pub fn build(b: *std.build.Builder) !void {
     const target = b.standardTargetOptions(.{});
     const mode = b.standardReleaseOptions();
 
+    const zutty_zig = b.addStaticLibrary("zutty_zig", "src/fontpack.zig");
+    zutty_zig.setTarget(target);
+    zutty_zig.setBuildMode(mode);
+    zutty_zig.linkLibC();
+    zutty_zig.addIncludePath("src");
+
     const exe = b.addExecutable("zutty", "src/main.zig");
     exe.setTarget(target);
     exe.setBuildMode(mode);
@@ -13,6 +19,7 @@ pub fn build(b: *std.build.Builder) !void {
     exe.linkSystemLibrary("xmu");
     exe.linkSystemLibrary("egl");
     exe.linkSystemLibrary("glesv2");
+    exe.linkLibrary(zutty_zig);
 
     if (exe.target.isLinux()) {
         exe.defineCMacro("LINUX", null);
