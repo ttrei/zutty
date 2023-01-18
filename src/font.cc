@@ -174,6 +174,11 @@ namespace zutty
          charcode = FT_Get_Next_Char (face, charcode, &gindex);
       }
 
+      if (!overlay) {
+          const AtlasPos apos = {0, 0};
+          loadFace(face, 63, apos);
+      }
+
       if (loadSkipCount)
       {
          logI << "Skipped loading " << loadSkipCount << " code point(s) "
