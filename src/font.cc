@@ -174,6 +174,10 @@ namespace zutty
          charcode = FT_Get_Next_Char (face, charcode, &gindex);
       }
 
+      if (!overlay) {
+          loadFace(face, 63, {0, 0});
+      }
+
       if (loadSkipCount)
       {
          logI << "Skipped loading " << loadSkipCount << " code point(s) "
