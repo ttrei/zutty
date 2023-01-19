@@ -330,10 +330,10 @@ namespace zutty
 
       if (overlay) // clear glyph area, as we are overwriting an existing glyph
       {
-         for (int j = 0; j < bh; ++j) {
+         for (int j = 0; j < py; ++j) {
             uint8_t* atl_dst_row =
                atlasBuf.data () + atlas_glyph_offset + j * nx * px;
-            for (int k = 0; k < bw; ++k) {
+            for (int k = 0; k < px; ++k) {
                *atl_dst_row++ = 0;
             }
          }
