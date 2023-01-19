@@ -21,32 +21,28 @@
 #include <mutex>
 #include <thread>
 
-namespace zutty
-{
-   class Renderer
-   {
-   public:
-      Renderer (const std::function <void ()>& initDisplay,
-                const std::function <void ()>& swapBuffers,
-                Fontpack* fontpk);
+namespace zutty {
+class Renderer {
+public:
+  Renderer(const std::function<void()> &initDisplay,
+           const std::function<void()> &swapBuffers, Fontpack *fontpk);
 
-      ~Renderer ();
+  ~Renderer();
 
-      void update (const Frame& frame);
+  void update(const Frame &frame);
 
-   private:
-      std::unique_ptr <CharVdev> charVdev;
-      const std::function <void ()> swapBuffers;
-      Frame nextFrame;
-      uint64_t seqNo = 0;
-      bool done = false;
+private:
+  std::unique_ptr<CharVdev> charVdev;
+  const std::function<void()> swapBuffers;
+  Frame nextFrame;
+  uint64_t seqNo = 0;
+  bool done = false;
 
-      std::condition_variable cond;
-      std::mutex mx;
-      std::thread thr;
+  std::condition_variable cond;
+  std::mutex mx;
+  std::thread thr;
 
-      void renderThread (const std::function <void ()>& initDisplay,
-                         Fontpack* fontpk);
-   };
+  void renderThread(const std::function<void()> &initDisplay, Fontpack *fontpk);
+};
 
 } // namespace zutty

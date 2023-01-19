@@ -12,8 +12,8 @@
 #pragma once
 
 #define GL_GLEXT_PROTOTYPES 1
-#include <GLES3/gl31.h>
 #include <EGL/egl.h>
+#include <GLES3/gl31.h>
 
 #include <stdexcept>
 
@@ -23,8 +23,7 @@
 #define glCheckError()
 #endif
 
-namespace gl
-{
-   void CheckError_ (const char* file, int line);
+namespace gl {
+void CheckError_(const char *file, int line);
 
-} // namespace
+} // namespace gl

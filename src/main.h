@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 
-int old_main (int argc, char* argv[]);
+int old_main(int argc, char *argv[]);
 
 #ifdef __cplusplus
 }
