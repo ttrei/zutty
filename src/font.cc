@@ -175,7 +175,7 @@ namespace zutty
       }
 
       if (!overlay) {
-          loadFace(face, 63, {0, 0});
+          createUnknownGlyphBitmap();
       }
 
       if (loadSkipCount)
@@ -379,6 +379,32 @@ namespace zutty
          throw std::runtime_error (
             std::string ("Unhandled pixel_type=") +
             std::to_string (bmp.pixel_mode));
+      }
+   }
+
+   void Font::createUnknownGlyphBitmap()
+   {
+      // 
+      uint8_t* pixel;
+      // Top row
+      pixel = atlasBuf.data() + nx * px + 1;
+      for (int k = 0; k < px - 2; ++k) {
+         *pixel++ = 0xFF;
+      }
+      // Bottom row
+      pixel = atlasBuf.data() + (py - 2) * nx * px + 1;
+      for (int k = 0; k < px - 2; ++k) {
+         *pixel++ = 0xFF;
+      }
+      // Columns and diagonals
+      for (int j = 1; j < py - 1; ++j) {
+         uint8_t* left_column = atlasBuf.data() + j * nx * px + 1;
+         uint8_t* right_column = atlasBuf.data() + j * nx * px + px - 2; 
+         uint8_t diagonal_offset = (j - 1) * (px - 2) / (py - 2);
+         *left_column = 0xFF;
+         *(left_column + diagonal_offset) = 0xFF;
+         *(right_column - diagonal_offset) = 0xFF;
+         *right_column = 0xFF;
       }
    }
 

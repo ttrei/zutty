@@ -104,6 +104,7 @@ namespace zutty
       void loadFixed (const FT_Face& face);
       void loadScaled (const FT_Face& face);
       void loadFace (const FT_Face& face, FT_ULong c);
+      void createUnknownGlyphBitmap();
       void loadFace (const FT_Face& face, FT_ULong c, const AtlasPos& apos);
    };
 
